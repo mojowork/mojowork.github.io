@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="koa," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="koa作为下一代web应用框架，尤其是使用了ES7的async和await,更是把简洁渗入血脉。在开始说koa之前，我们先讲讲koa的好搭档MongoDB。 mongoBD服务配置(window)在MongoDB安装目录下bin同级下，新建目录1234mkdir datamkdir logcd logtouch mongo.log 添加环境变量此电脑 =&amp;gt; 属性 =&amp;gt; 高级系统设置 =">
+<meta name="keywords" content="koa">
+<meta property="og:type" content="article">
+<meta property="og:title" content="koa2入门系列教程（一）mongoDB的使用">
+<meta property="og:url" content="http://chaoshuai.me/2017/10/07/koa2入门系列教程（一）mongoDB的使用/index.html">
+<meta property="og:site_name" content="瑶台俱乐部">
+<meta property="og:description" content="koa作为下一代web应用框架，尤其是使用了ES7的async和await,更是把简洁渗入血脉。在开始说koa之前，我们先讲讲koa的好搭档MongoDB。 mongoBD服务配置(window)在MongoDB安装目录下bin同级下，新建目录1234mkdir datamkdir logcd logtouch mongo.log 添加环境变量此电脑 =&amp;gt; 属性 =&amp;gt; 高级系统设置 =">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-09-07T07:05:24.714Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="koa2入门系列教程（一）mongoDB的使用">
+<meta name="twitter:description" content="koa作为下一代web应用框架，尤其是使用了ES7的async和await,更是把简洁渗入血脉。在开始说koa之前，我们先讲讲koa的好搭档MongoDB。 mongoBD服务配置(window)在MongoDB安装目录下bin同级下，新建目录1234mkdir datamkdir logcd logtouch mongo.log 添加环境变量此电脑 =&amp;gt; 属性 =&amp;gt; 高级系统设置 =">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://chaoshuai.me/2017/10/07/koa2入门系列教程（一）mongoDB的使用/"/>
+
+
+
+
+
+  <title>koa2入门系列教程（一）mongoDB的使用 | 瑶台俱乐部</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">瑶台俱乐部</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">我愿在这里做一辈子的前端 o(*￣︶￣*)o</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://chaoshuai.me/2017/10/07/koa2入门系列教程（一）mongoDB的使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="chaos">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="瑶台俱乐部">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">koa2入门系列教程（一）mongoDB的使用</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-07T13:07:51+08:00">
+                2017-10-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>koa作为下一代web应用框架，尤其是使用了ES7的async和await,更是把简洁渗入血脉。在开始说koa之前，我们先讲讲koa的好搭档<a href="https://www.mongodb.com/download-center?jmp=nav#community" target="_blank" rel="noopener">MongoDB</a>。</p>
+<h2 id="mongoBD服务配置-window"><a href="#mongoBD服务配置-window" class="headerlink" title="mongoBD服务配置(window)"></a>mongoBD服务配置(window)</h2><h3 id="在MongoDB安装目录下bin同级下，新建目录"><a href="#在MongoDB安装目录下bin同级下，新建目录" class="headerlink" title="在MongoDB安装目录下bin同级下，新建目录"></a>在MongoDB安装目录下bin同级下，新建目录</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir data</span><br><span class="line">mkdir <span class="built_in">log</span></span><br><span class="line"><span class="built_in">cd</span> <span class="built_in">log</span></span><br><span class="line">touch mongo.log</span><br></pre></td></tr></table></figure>
+<h3 id="添加环境变量"><a href="#添加环境变量" class="headerlink" title="添加环境变量"></a>添加环境变量</h3><p>此电脑 =&gt; 属性 =&gt; 高级系统设置 =&gt; 环境变量 =&gt; path<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\Program Files\MongoDB\Server\3.4\bin</span><br></pre></td></tr></table></figure></p>
+<h3 id="注册为服务，开机自动启动"><a href="#注册为服务，开机自动启动" class="headerlink" title="注册为服务，开机自动启动"></a>注册为服务，开机自动启动</h3><p><strong>以管理员权限启动CMD</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongod --dbpath <span class="string">"C:\Program Files\MongoDB\Server\3.4\data"</span> --logpath <span class="string">"C:\Program Files\MongoDB\Server\3.4\log\mongo.log"</span> --logappend --install --serviceName <span class="string">"MongoDB"</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>搜索MongoDB服务，设置启动</strong></p>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongo</span><br></pre></td></tr></table></figure>
+<h3 id="注销服务"><a href="#注销服务" class="headerlink" title="注销服务"></a>注销服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongod.exe --remove --serviceName <span class="string">"MongoDB"</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="基础命令"><a href="#基础命令" class="headerlink" title="基础命令"></a>基础命令</h2><h3 id="查看所有库"><a href="#查看所有库" class="headerlink" title="查看所有库"></a>查看所有库</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">show dbs</span><br><span class="line"></span><br><span class="line">admin  0.000GB</span><br><span class="line"><span class="built_in">local</span>  0.000GB</span><br></pre></td></tr></table></figure>
+<h3 id="使用库（没有则新建库）"><a href="#使用库（没有则新建库）" class="headerlink" title="使用库（没有则新建库）"></a>使用库（没有则新建库）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">use app</span><br><span class="line"></span><br><span class="line">switched to db app</span><br></pre></td></tr></table></figure>
+<h3 id="创建一条数据并查找出来"><a href="#创建一条数据并查找出来" class="headerlink" title="创建一条数据并查找出来"></a>创建一条数据并查找出来</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">db.user.save(&#123;name: <span class="string">"chaoshuai"</span>&#125;)</span><br><span class="line"></span><br><span class="line">WriteResult(&#123; <span class="string">"nInserted"</span> : 1 &#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">db.user.find()</span><br><span class="line"></span><br><span class="line">&#123; <span class="string">"_id"</span> : ObjectId(<span class="string">"59d87fc36f962cd49948149c"</span>), <span class="string">"name"</span> : <span class="string">"chaoshuai"</span> &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="更新一条数据（没有-set-会覆盖所有属性）"><a href="#更新一条数据（没有-set-会覆盖所有属性）" class="headerlink" title="更新一条数据（没有$set:{},会覆盖所有属性）"></a>更新一条数据（没有$set:{},会覆盖所有属性）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.user.update(&#123;<span class="string">"_id"</span> : ObjectId(<span class="string">"59d87fc36f962cd49948149c"</span>&#125;,&#123;<span class="variable">$set</span>:&#123;<span class="string">"name"</span>: <span class="string">"xiaoshuai"</span>&#125;&#125;)</span><br></pre></td></tr></table></figure>
+<h3 id="删除记录-条件为空不会执行"><a href="#删除记录-条件为空不会执行" class="headerlink" title="删除记录(条件为空不会执行)"></a>删除记录(条件为空不会执行)</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.user.remove(&#123;name: <span class="string">'xiaoshuai'</span>&#125;)</span><br></pre></td></tr></table></figure>
+<h3 id="删除表"><a href="#删除表" class="headerlink" title="删除表"></a>删除表</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.mytable.drop();</span><br></pre></td></tr></table></figure>
+<h3 id="创建用户"><a href="#创建用户" class="headerlink" title="创建用户"></a>创建用户</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.createUser(&#123;user: <span class="string">'copy'</span>,<span class="built_in">pwd</span>: <span class="string">'123'</span>, roles:[&#123;role:<span class="string">'dbOwner'</span>,db:<span class="string">'myblog'</span>&#125;]&#125;)</span><br></pre></td></tr></table></figure>
+<h2 id="mongoose-建模和操作数据库"><a href="#mongoose-建模和操作数据库" class="headerlink" title="mongoose 建模和操作数据库"></a>mongoose 建模和操作数据库</h2><h3 id="连接数据库"><a href="#连接数据库" class="headerlink" title="连接数据库"></a>连接数据库</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> db = <span class="string">'mongodb://localhost/app'</span></span><br><span class="line">mongoose.connect(db, &#123;<span class="attr">useMongoClient</span>:<span class="literal">true</span>&#125;)</span><br></pre></td></tr></table></figure>
+<h3 id="定义Schema-不具备操作数据库的能力"><a href="#定义Schema-不具备操作数据库的能力" class="headerlink" title="定义Schema(不具备操作数据库的能力)"></a>定义Schema(不具备操作数据库的能力)</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> mongoose = <span class="built_in">require</span>(<span class="string">'mongoose'</span>)</span><br><span class="line"><span class="keyword">const</span> UserSchema = <span class="keyword">new</span> mongoose.Schema(&#123;</span><br><span class="line">	name: <span class="built_in">String</span>,</span><br><span class="line">	age: <span class="built_in">Number</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>Schema Types内置类型如下：</p>
+<p>　　String</p>
+<p>　　Number</p>
+<p>　　Boolean | Bool</p>
+<p>　　Array</p>
+<p>　　Buffer</p>
+<p>　　Date</p>
+<p>　　ObjectId | Oid</p>
+<p>　　Mixed</p>
+<h3 id="由Schema生成Model-可以对数据库的操作"><a href="#由Schema生成Model-可以对数据库的操作" class="headerlink" title="由Schema生成Model(可以对数据库的操作)"></a>由Schema生成Model(可以对数据库的操作)</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> userModel = mongoose.model(<span class="string">'User'</span>,UserSchema)</span><br></pre></td></tr></table></figure>
+<h3 id="生成新用户并保存"><a href="#生成新用户并保存" class="headerlink" title="生成新用户并保存"></a>生成新用户并保存</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> mongoose = <span class="built_in">require</span>(<span class="string">'mongoose'</span>)</span><br><span class="line"><span class="keyword">const</span> User = mongoose.model(<span class="string">'User'</span>)</span><br><span class="line"><span class="keyword">const</span> user = <span class="keyword">new</span> User(&#123;</span><br><span class="line">	name: <span class="string">'chaoshuai'</span>,</span><br><span class="line">	age: <span class="number">20</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">	user.save()</span><br><span class="line">&#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'保存信息出错'</span>)</span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'保存成功'</span>)</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/koa/" rel="tag"># koa</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/06/CSS3实现图片闪光划过效果/" rel="next" title="CSS3实现图片闪光划过效果">
+                <i class="fa fa-chevron-left"></i> CSS3实现图片闪光划过效果
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/08/koa2入门系列教程（二）koa的基本用法/" rel="prev" title="koa2入门系列教程（二）koa的基本用法">
+                koa2入门系列教程（二）koa的基本用法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">chaos</p>
+              <p class="site-description motion-element" itemprop="description">此间只应天上有，人间哪的几回闻</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#mongoBD服务配置-window"><span class="nav-number">1.</span> <span class="nav-text">mongoBD服务配置(window)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#在MongoDB安装目录下bin同级下，新建目录"><span class="nav-number">1.1.</span> <span class="nav-text">在MongoDB安装目录下bin同级下，新建目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加环境变量"><span class="nav-number">1.2.</span> <span class="nav-text">添加环境变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注册为服务，开机自动启动"><span class="nav-number">1.3.</span> <span class="nav-text">注册为服务，开机自动启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试"><span class="nav-number">1.4.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注销服务"><span class="nav-number">1.5.</span> <span class="nav-text">注销服务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基础命令"><span class="nav-number">2.</span> <span class="nav-text">基础命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#查看所有库"><span class="nav-number">2.1.</span> <span class="nav-text">查看所有库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用库（没有则新建库）"><span class="nav-number">2.2.</span> <span class="nav-text">使用库（没有则新建库）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建一条数据并查找出来"><span class="nav-number">2.3.</span> <span class="nav-text">创建一条数据并查找出来</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更新一条数据（没有-set-会覆盖所有属性）"><span class="nav-number">2.4.</span> <span class="nav-text">更新一条数据（没有$set:{},会覆盖所有属性）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除记录-条件为空不会执行"><span class="nav-number">2.5.</span> <span class="nav-text">删除记录(条件为空不会执行)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除表"><span class="nav-number">2.6.</span> <span class="nav-text">删除表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建用户"><span class="nav-number">2.7.</span> <span class="nav-text">创建用户</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mongoose-建模和操作数据库"><span class="nav-number">3.</span> <span class="nav-text">mongoose 建模和操作数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#连接数据库"><span class="nav-number">3.1.</span> <span class="nav-text">连接数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定义Schema-不具备操作数据库的能力"><span class="nav-number">3.2.</span> <span class="nav-text">定义Schema(不具备操作数据库的能力)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#由Schema生成Model-可以对数据库的操作"><span class="nav-number">3.3.</span> <span class="nav-text">由Schema生成Model(可以对数据库的操作)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#生成新用户并保存"><span class="nav-number">3.4.</span> <span class="nav-text">生成新用户并保存</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">chaos</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
